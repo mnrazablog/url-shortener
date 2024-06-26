@@ -83,7 +83,8 @@ useEffect(() => {
         </CardDescription>
         {error && <Error message={error.message} />}
       </CardHeader>
-      <CardContent className="space-y-2 ">
+   <form >
+   <CardContent className="space-y-2 ">
         <div className="space-y-1">
           <Input
             name="email"
@@ -99,10 +100,12 @@ useEffect(() => {
             placeholder="Enter your Password"
             type="password"
             onChange={handleInputChange}
+            autoComplete="true"
           />
           {errors.password && <Error message={errors.password} />}
         </div>
       </CardContent>
+   </form>
       <CardFooter className="flex justify-center">
         <Button onClick={handleLogin} className="text-base font-bold">
           {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}

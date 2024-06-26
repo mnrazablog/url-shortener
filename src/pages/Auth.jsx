@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Login from "@/components/Login";
 import SignUp from "@/components/SignUp";
 import { UrlsState } from "@/context/context";
@@ -8,15 +8,15 @@ import { UrlsState } from "@/context/context";
 const Auth = () => {
   const [searchParams] = useSearchParams();
   const longLink = searchParams.get("createNew");
-const navigate = useNavigate()
+  const navigate = useNavigate();
 
-const {isAuthenticated, loading} = UrlsState()
+  const { isAuthenticated, loading } = UrlsState();
 
-useEffect(() => {
-  if(isAuthenticated && !loading){
-    navigate(`/dashboard?${longLink ? `createNew=${longLink}`:""}`);
-  }
-}, [isAuthenticated])
+  useEffect(() => {
+    if (isAuthenticated && !loading) {
+      navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+    }
+  }, [isAuthenticated, loading]);
 
   return (
     <div className="mt-8 sm:mt-16 lg:mt-20 flex flex-col items-center gap-10">
@@ -30,10 +30,10 @@ useEffect(() => {
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
         </TabsList>
         <TabsContent value="login">
-          <Login/>
+          <Login />
         </TabsContent>
         <TabsContent value="signup">
-          <SignUp/>
+          <SignUp />
         </TabsContent>
       </Tabs>
     </div>
