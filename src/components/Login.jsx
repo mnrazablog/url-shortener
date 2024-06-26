@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +12,10 @@ import { Button } from "./ui/button";
 import { BeatLoader } from "react-spinners";
 import Error from "./Error";
 import * as Yup from "yup";
+import useFetch from "@/hooks/useFetch";
+import { login } from "@/db/apiAuth";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { UrlsState } from "@/context/context";
 
 const Login = () => {
   const [errors, setErrors] = useState([]);
@@ -19,6 +23,13 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate()
+  let [searchParams]= useSearchParams();
+  const longLink = searchParams.get("createNew");
+
+
+//  To handle onChange for Input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -27,7 +38,19 @@ const Login = () => {
       [name]: value,
     }));
   };
+// To use custome hook - useFetch()
+const {data, error, loading, fn:fnLogin} = useFetch(login,formData)
+const {fetchUser} = UrlsState();
 
+useEffect(() => {
+  if(error===null && data){
+    navigate(`/dashboard?${longLink ? `createNew=${longLink}`:""}`);
+    fetchUser();
+  }
+}, [data, error])
+
+
+// To handle Login function
   const handleLogin = async () => {
     setErrors([]);
     try {
@@ -41,6 +64,7 @@ const Login = () => {
       });
       await schema.validate(formData, { abortEarly: false });
       //   api Call
+      await fnLogin() 
     } catch (e) {
       const newErrors = {};
       e?.inner?.forEach((err) => {
@@ -49,6 +73,7 @@ const Login = () => {
       setErrors(newErrors);
     }
   };
+
   return (
     <Card>
       <CardHeader>
@@ -56,7 +81,7 @@ const Login = () => {
         <CardDescription>
           to your account if you already have one
         </CardDescription>
-        <Error message={"some error"} />
+        {error && <Error message={error.message} />}
       </CardHeader>
       <CardContent className="space-y-2 ">
         <div className="space-y-1">
@@ -80,7 +105,7 @@ const Login = () => {
       </CardContent>
       <CardFooter className="flex justify-center">
         <Button onClick={handleLogin} className="text-base font-bold">
-          {false ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
+          {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
         </Button>
       </CardFooter>
     </Card>

@@ -1,18 +1,27 @@
-import React from "react";
-import { useSearchParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Login from "@/components/Login";
 import SignUp from "@/components/SignUp";
+import { UrlsState } from "@/context/context";
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
+  const longLink = searchParams.get("createNew");
+const navigate = useNavigate()
+
+const {isAuthenticated, loading} = UrlsState()
+
+useEffect(() => {
+  if(isAuthenticated && !loading){
+    navigate(`/dashboard?${longLink ? `createNew=${longLink}`:""}`);
+  }
+}, [isAuthenticated])
 
   return (
-    <div className="mt-36 flex flex-col items-center gap-10">
+    <div className="mt-8 sm:mt-16 lg:mt-20 flex flex-col items-center gap-10">
       <h1 className="text-5xl font-extrabold">
-        {searchParams.get("createNew")
-          ? "hold up! Let's login first"
-          : "Login / SignUp"}
+        {longLink ? "hold up! Let's login first" : "Login / SignUp"}
       </h1>
       {/* Tabs */}
       <Tabs defaultValue="login" className="w-[400px]">

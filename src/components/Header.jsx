@@ -12,10 +12,11 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LinkIcon, LogOut } from "lucide-react";
+import { UrlsState } from "@/context/context";
 
 const Header = () => {
   const navigate = useNavigate();
-  const user = false;
+  const {isAuthenticated} = UrlsState()
 
   return (
     <nav className="p-4 flex justify-between items-center">
@@ -23,7 +24,7 @@ const Header = () => {
         <img className="w-48" src={logo} alt="Shorten Logo" />
       </Link>
       <div>
-        {!user ? (
+        {!isAuthenticated ? (
           <Button onClick={() => navigate("/auth")}>Login</Button>
         ) : (
           <DropdownMenu>
